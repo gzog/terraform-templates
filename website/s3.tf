@@ -1,4 +1,4 @@
-resource "aws_s3_bucket" "b" {
+resource "aws_s3_bucket" "bucket" {
   bucket = "${var.s3_bucket_name}"
   acl    = "private"
 }
@@ -6,7 +6,7 @@ resource "aws_s3_bucket" "b" {
 data "aws_iam_policy_document" "s3_policy" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.b.arn}/*"]
+    resources = ["${aws_s3_bucket.bucket.arn}/*"]
 
     principals {
       type        = "AWS"
@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "s3_policy" {
 
   statement {
     actions   = ["s3:ListBucket"]
-    resources = ["${aws_s3_bucket.b.arn}"]
+    resources = ["${aws_s3_bucket.bucket.arn}"]
 
     principals {
       type        = "AWS"
@@ -26,6 +26,6 @@ data "aws_iam_policy_document" "s3_policy" {
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = "${aws_s3_bucket.b.id}"
+  bucket = "${aws_s3_bucket.bucket.id}"
   policy = "${data.aws_iam_policy_document.s3_policy.json}"
 }
